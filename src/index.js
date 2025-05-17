@@ -7,8 +7,9 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { BrowserRouter } from 'react-router-dom';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
+const baseName = process.env.PUBLIC_URL;
 root.render(
-  <BrowserRouter>
+  <BrowserRouter basename={baseName}>
     <App />
   </BrowserRouter>
 );
