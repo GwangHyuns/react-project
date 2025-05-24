@@ -2,8 +2,17 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { Button, Card, Col, Form, InputGroup, Row } from 'react-bootstrap';
 import BookPage from './BookPage';
+import { BsCart2 } from "react-icons/bs";
+import { app } from '../firebase';
+import { getDatabase, ref, set, get } from 'firebase/database'
+import { useNavigate } from 'react-router-dom';
+import moment from 'moment';
 
 const HomePage = () => {
+  const db = getDatabase(app);
+  const [loading, setLoading] = useState(false);
+  const uid = sessionStorage.getItem("uid");
+  const navi = useNavigate();
   const [documents, setDocuments] = useState([]);
   const [query, setQuery] = useState('리액트');
   const [page, setPage] = useState(1);
@@ -40,6 +49,26 @@ const HomePage = () => {
     }
   }
 
+  const onClickCart = (book) => {
+    if (uid) {
+      get(ref(db, `cart/${uid}/${book.isbn}`))
+      .then(snapshot=>{
+        if(snapshot.exists()) {
+          alert('장바구니에 이미 존재합니다.');
+        } else {
+         //장바구니 넣기
+        const date = moment(new Date()).format("YYYY-MM-DD HH:mm-ss");
+        set(ref(db,`cart/${uid}/${book.isbn}`), {...book, date});
+        alert("장바구니에 추가되었습니다."); 
+        }
+      });      
+    } else {
+      navi("/login");
+    }
+  }
+
+  if (loading) <h1 className='text-center'>로딩중.....</h1>
+
   return (
     <div>
       <h1 className='my-5 text-center'>홈페이지</h1>
@@ -69,7 +98,10 @@ const HomePage = () => {
                 </Card.Body>
                 <Card.Footer>
                   <div className='text-truncate'>{doc.title}</div>
-                  <div>{doc.sale_price}원</div>
+                  <Row>
+                    <Col>{doc.sale_price}원</Col>
+                    <Col className='text-end cart'><BsCart2 onClick={()=>onClickCart(doc)}/></Col>
+                  </Row>
                 </Card.Footer>
               </Card>
             </Col>

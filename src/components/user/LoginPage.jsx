@@ -1,7 +1,13 @@
 import React, { useState } from 'react'
 import { Button, Card, Col, Form, Row } from 'react-bootstrap'
+import { app } from '../../firebase'
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import { useNavigate } from 'react-router-dom';
 
 const LoginPage = () => {
+    const auth = getAuth(app)
+    const [loading, setLoading] = useState(false);
+    const navi = useNavigate();
     const baseName = process.env.PUBLIC_URL;
     const [form, setForm] = useState({
         email: 'blue@inha.com',
@@ -23,8 +29,23 @@ const LoginPage = () => {
             alert('이메일이나 패스워드를 입력하세요.');
         } else {
             //로그인 체크
+            setLoading(true);
+            signInWithEmailAndPassword(auth, email, pass)
+            .then(success=>{
+                alert("로그인 성공");
+                sessionStorage.setItem('email', email);
+                sessionStorage.setItem('uid', success.user.uid);
+                setLoading(false);
+                navi('/');
+            })
+            .catch(error=> {
+                alert("로그인 실패" + error.message);
+                setLoading(true);
+            });            
         }
     }
+
+    if(loading) return <h1 className='my-5 text-center'>로딩중.....</h1>
 
     return (
         <div>
