@@ -36,6 +36,7 @@ const Menubar = () => {
             navbarScroll>
             <Nav.Link href={`${baseName}/`} active={pathname==='/'}>Home</Nav.Link>
             {email && <Nav.Link href={`${baseName}/cart`} active={pathname==='/cart'}>장바구니</Nav.Link>}
+            <Nav.Link href={`${baseName}/post`} active={pathname.startsWith('/post')}>게시판</Nav.Link>
           </Nav>
           <Nav>
             {email ?
