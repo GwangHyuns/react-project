@@ -9,3 +9,10 @@
     font-size: 20px;    
     color: red;
 }
+
+.textarea {
+    width:100%;
+    outline:none;
+    border:none;
+    border-bottom: 1px solid black;
+}

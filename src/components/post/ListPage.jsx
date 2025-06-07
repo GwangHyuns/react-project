@@ -66,7 +66,7 @@ const ListPage = () => {
                         posts.map(post =>
                             <tr key={post.no}>
                                 <td>{post.no}</td>
-                                <td>{post.title}</td>
+                                <td><a href={`${process.env.PUBLIC_URL}/post/${post.id}`}>{post.title}</a></td>
                                 <td>{post.email}</td>
                                 <td>{post.date}</td>
                             </tr>
